@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador ENARM Interactivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px 0;
+        }
+        .btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Simulador ENARM - Caso Clínico</h1>
+    
+    <div id="quiz">
+        <div class="question">
+            <p id="question-text">Masculino de 4 años quien es referido a urgencias debido a la ausencia de reflejo rojo en el ojo izquierdo. ¿Qué auxiliar diagnóstico estaría contraindicado en este paciente?</p>
+            <ul class="options">
+                <li><input type="radio" name="answer" value="A"> A) Resonancia magnética</li>
+                <li><input type="radio" name="answer" value="B"> B) Biopsia con aguja fina</li>
+                <li><input type="radio" name="answer" value="C"> C) Oftalmoscopia indirecta</li>
+                <li><input type="radio" name="answer" value="D"> D) USG A/B tridimensional</li>
+            </ul>
+        </div>
+
+        <button class="btn" onclick="checkAnswer()">Verificar Respuesta</button>
+        
+        <div class="result" id="result"></div>
+        <button class="btn" onclick="nextQuestion()">Siguiente Pregunta</button>
+    </div>
+</div>
+
+<script>
+    let currentQuestionIndex = 0;
+    const questions = [
+        {
+            question: "Masculino de 4 años quien es referido a urgencias debido a la ausencia de reflejo rojo en el ojo izquierdo. ¿Qué auxiliar diagnóstico estaría contraindicado en este paciente?",
+            options: ["A) Resonancia magnética", "B) Biopsia con aguja fina", "C) Oftalmoscopia indirecta", "D) USG A/B tridimensional"],
+            correctAnswer: "B"
+        },
+        {
+            question: "Femenino de 64 años que es llevada al servicio de urgencias por presentar temperatura de 39.5°C asociado a mal estado general y piel marmórea. ¿Cuál es su diagnóstico?",
+            options: ["A) Choque séptico", "B) Choque hipovolémico", "C) Choque cardiogénico", "D) Choque neurogénico"],
+            correctAnswer: "A"
+        },
+        {
+            question: "¿Cuántos mililitros están indicados para realizar una prueba inicial de reposición hídrica?",
+            options: ["A) 10 ml/kg", "B) 5 ml/kg", "C) 200 ml/kg", "D) 30 ml/kg"],
+            correctAnswer: "D"
+        },
+        // Agregar más preguntas aquí
+    ];
+
+    function displayQuestion() {
+        const question = questions[currentQuestionIndex];
+        document.getElementById("question-text").textContent = question.question;
+        const optionsList = document.querySelector('.options');
+        optionsList.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<input type="radio" name="answer" value="${String.fromCharCode(65 + index)}"> ${option}`;
+            optionsList.appendChild(li);
+        });
+        
+        document.getElementById('result').textContent = '';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        const resultDiv = document.getElementById('result');
+
+        if (selectedOption) {
+            const answer = selectedOption.value;
+            const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+            
+            if (answer === correctAnswer) {
+                resultDiv.textContent = "¡Correcto!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = `Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                resultDiv.style.color = "red";
+            }
+        } else {
+            resultDiv.textContent = "Por favor, selecciona una opción.";
+            resultDiv.style.color = "orange";
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+        } else {
+            document.getElementById('result').textContent = "Has completado el simulador.";
+        }
+    }
+
+    // Mostrar la primera pregunta al cargar la página
+    window.onload = displayQuestion;
+</script>
+
+</body>
+</html>
